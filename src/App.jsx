@@ -28,115 +28,165 @@ Ermtopp: Fell av 3 masker i hver side. Fell deretter 1 maske i hver side annenhv
 
 const C = {
   ivory: "#FAFAF5",
-  sand: "#EDE9E1",
-  sandDark: "#DDD7CC",
+  paper: "#F4F0EA",
+  sand: "#E7E1D8",
+  sandDark: "#D8D0C5",
   forest: "#2D6B4F",
+  forestDeep: "#244F3B",
   forestLight: "#E8F0EB",
-  forestMid: "#3D8B67",
   clay: "#C4957A",
-  clayLight: "#F5EDE7",
+  clayLight: "#F4ECE6",
   charcoal: "#2C2925",
   charcoalSoft: "#4A4640",
   textPri: "#2C2925",
-  textSec: "#7A756C",
-  textTer: "#A8A49C",
+  textSec: "#6F6A62",
+  textTer: "#A29C93",
   border: "rgba(44,41,37,0.08)",
-  borderHover: "rgba(44,41,37,0.15)",
+  borderStrong: "rgba(44,41,37,0.14)",
 };
 
 const RESPONSIVE_CSS = `
 ${FONTS}
 
 @keyframes sp{to{transform:rotate(360deg)}}
-@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pu{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pu{0%,100%{opacity:.45}50%{opacity:1}}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0}
+html{scroll-behavior:smooth}
+body{margin:0;background:${C.ivory}}
 textarea:focus,input:focus{outline:none;border-color:${C.forest} !important;box-shadow:0 0 0 3px rgba(45,107,79,0.08) !important}
 ::selection{background:rgba(45,107,79,0.12)}
 textarea::placeholder,input::placeholder{color:${C.textTer}}
-input[type=range]{accent-color:${C.forest}}
 
-.mk-header-inner{max-width:720px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
-.mk-main{max-width:720px;margin:0 auto;padding:28px 24px 48px}
-.mk-card{background:#fff;border-radius:14px;padding:22px 24px;border:1px solid ${C.border};margin-bottom:16px}
-.mk-settings{display:flex;gap:16px}
-.mk-settings .mk-card{flex:1;min-width:0}
-.mk-sz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.mk-result-head{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.mk-result-body{padding:24px}
-.mk-result-actions{display:flex;gap:8px}
-.mk-footer{border-top:1px solid ${C.border};padding:18px 24px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
-.mk-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px}
-.mk-drop{padding:44px 24px}
-.mk-pdf-loading{padding:44px 24px}
-.mk-logo{font-size:24px}
-.mk-logo-sub{font-size:12px}
-.mk-tab-btn{padding:12px 20px;min-height:44px}
-.mk-submit{padding:16px;min-height:52px;font-size:15px}
-.mk-mode-btn{padding:10px 14px;min-height:44px}
-.mk-badge{display:flex}
-.mk-tip{display:flex;gap:12px;padding:14px 18px}
+.ly-header-inner{max-width:980px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.ly-main{max-width:980px;margin:0 auto;padding:28px 28px 54px}
+.ly-hero{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-bottom:18px}
+.ly-card{background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border-radius:18px;padding:24px;border:1px solid ${C.border};box-shadow:0 8px 24px rgba(0,0,0,.03)}
+.ly-card-soft{background:${C.paper};border-radius:18px;padding:24px;border:1px solid ${C.border}}
+.ly-settings{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ly-sz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ly-result-head{padding:22px 24px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+.ly-result-body{padding:24px}
+.ly-result-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ly-footer{border-top:1px solid ${C.border};padding:20px 24px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.ly-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px}
+.ly-drop{padding:44px 24px}
+.ly-pdf-loading{padding:44px 24px}
+.ly-tab-btn{padding:12px 18px;min-height:44px}
+.ly-submit{padding:16px;min-height:54px;font-size:15px}
+.ly-mode-btn{padding:10px 14px;min-height:44px}
+.ly-badge{display:flex}
+.ly-tip{display:flex;gap:12px;padding:14px 18px}
+.ly-brandline{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:${C.textTer};font-weight:500}
+.ly-display{font-family:'Cormorant Garamond',serif;font-size:56px;line-height:.95;letter-spacing:-.04em;color:${C.textPri};margin:10px 0 12px}
+.ly-lead{font-size:15px;line-height:1.75;color:${C.textSec};max-width:56ch;margin:0}
+.ly-hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.ly-hero-chip{padding:7px 12px;border:1px solid ${C.border};border-radius:999px;font-size:12px;color:${C.textSec};background:rgba(255,255,255,.65)}
+.ly-logo-lockup{display:flex;align-items:center;gap:14px}
+.ly-wordmark{font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1;color:${C.textPri};letter-spacing:-.03em}
+.ly-wordmark-sub{font-size:12px;color:${C.textSec};letter-spacing:.04em;margin-top:2px}
+.ly-logo-badge{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:${C.forestLight};border:1px solid rgba(45,107,79,0.1);font-size:11px;color:${C.forest};letter-spacing:.06em;text-transform:uppercase}
 
-@media(max-width:768px){
-  .mk-header-inner{padding:12px 20px}
-  .mk-main{padding:24px 20px 40px}
-  .mk-card{padding:20px 20px;border-radius:12px}
-  .mk-result-head{padding:18px 20px}
-  .mk-result-body{padding:20px}
-  .mk-settings{gap:12px}
-  .mk-logo{font-size:22px}
+@media(max-width:900px){
+  .ly-header-inner{padding:16px 22px}
+  .ly-main{padding:24px 22px 44px}
+  .ly-hero{grid-template-columns:1fr;gap:16px}
+  .ly-display{font-size:48px}
 }
 
-@media(max-width:520px){
-  .mk-header-inner{padding:12px 16px}
-  .mk-main{padding:20px 16px 36px}
-  .mk-card{padding:18px 16px;border-radius:11px}
-  .mk-settings{flex-direction:column;gap:12px}
-  .mk-settings .mk-card{min-width:100%}
-  .mk-sz-grid{grid-template-columns:repeat(3,1fr);gap:6px}
-  .mk-result-head{padding:16px 16px;flex-direction:column;align-items:flex-start}
-  .mk-result-actions{width:100%}
-  .mk-result-actions button{flex:1}
-  .mk-result-body{padding:18px 16px}
-  .mk-card-top{flex-wrap:wrap}
-  .mk-drop{padding:36px 16px}
-  .mk-pdf-loading{padding:36px 16px}
-  .mk-footer{padding:16px;gap:6px;font-size:11px}
-  .mk-logo{font-size:20px}
-  .mk-logo-sub{font-size:11px}
-  .mk-tab-btn{padding:12px 16px;font-size:13px}
-  .mk-submit{padding:16px;font-size:14px}
-  .mk-mode-btn{padding:10px 10px;font-size:12px}
-  .mk-badge{display:none}
-  .mk-tip{padding:12px 14px;gap:10px}
+@media(max-width:640px){
+  .ly-header-inner{padding:14px 16px}
+  .ly-main{padding:18px 16px 34px}
+  .ly-card,.ly-card-soft{padding:18px;border-radius:15px}
+  .ly-settings{grid-template-columns:1fr;gap:12px}
+  .ly-result-head{padding:18px 18px;flex-direction:column}
+  .ly-result-body{padding:18px}
+  .ly-result-actions{width:100%}
+  .ly-result-actions button{flex:1}
+  .ly-drop,.ly-pdf-loading{padding:34px 16px}
+  .ly-display{font-size:40px}
+  .ly-wordmark{font-size:28px}
+  .ly-wordmark-sub{font-size:11px}
+  .ly-badge{display:none}
 }
 
-@media(max-width:380px){
-  .mk-header-inner{padding:10px 12px}
-  .mk-main{padding:16px 12px 32px}
-  .mk-card{padding:16px 14px}
-  .mk-sz-grid{grid-template-columns:repeat(3,1fr);gap:5px}
-  .mk-result-body{padding:16px 14px}
+@media(max-width:420px){
+  .ly-display{font-size:34px}
 }
 `;
 
 function Spin({ s = 18 }) {
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none" style={{ animation: "sp .9s linear infinite" }}>
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="31.4 31.4" strokeDashoffset="10" />
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeDasharray="31.4 31.4"
+        strokeDashoffset="10"
+      />
     </svg>
   );
 }
 
-function Leaf({ s = 20, c = C.forest, style }) {
-  return (
-    <svg width={s} height={s} viewBox="0 0 24 24" style={style} fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round">
-      <path d="M12 2C6.5 6 4 10 4 15c0 3 2 5 5 5 1.5 0 2.5-.5 3-1.5.5 1 1.5 1.5 3 1.5 3 0 5-2 5-5 0-5-2.5-9-8-13z" fill={c} opacity=".08" />
-      <path d="M12 2C6.5 6 4 10 4 15c0 3 2 5 5 5 1.5 0 2.5-.5 3-1.5.5 1 1.5 1.5 3 1.5 3 0 5-2 5-5 0-5-2.5-9-8-13z" />
-      <path d="M12 2v18" opacity=".5" />
+function LykkjaLogo({ size = 46, withWordmark = false, stacked = false }) {
+  const icon = (
+    <svg width={size} height={size} viewBox="0 0 120 120" fill="none" aria-hidden="true">
+      <path
+        d="M26 18C39 17 77 17 93 18C100 22 103 25 106 28C106 41 106 61 104 73C101 91 89 103 60 113C31 103 19 91 16 73C14 61 14 41 14 28C18 24 20 22 26 18Z"
+        stroke={C.forest}
+        strokeWidth="3.4"
+        fill="rgba(45,107,79,0.03)"
+      />
+      <circle cx="61" cy="63" r="27" stroke={C.forest} strokeWidth="3.2" />
+      <path d="M49 37L36 13" stroke={C.forest} strokeWidth="3.2" strokeLinecap="round" />
+      <path d="M73 37L86 13" stroke={C.forest} strokeWidth="3.2" strokeLinecap="round" />
+      <circle cx="35" cy="12" r="3.8" fill={C.forest} />
+      <circle cx="87" cy="12" r="3.8" fill={C.forest} />
+      <path d="M38 55C48 44 58 42 83 54" stroke={C.forest} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M34 66C46 52 58 51 87 67" stroke={C.forest} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M38 77C48 67 62 66 87 79" stroke={C.forest} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M47 86C56 79 67 79 82 87" stroke={C.forest} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M80 46C89 52 94 57 95 68" stroke={C.forest} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M83 38C89 34 94 28 97 20" stroke={C.forest} strokeWidth="2.7" strokeLinecap="round" />
+      <path d="M90 46C98 45 103 41 106 35" stroke={C.forest} strokeWidth="2.7" strokeLinecap="round" />
+      <path d="M90 58C99 60 104 59 109 54" stroke={C.forest} strokeWidth="2.7" strokeLinecap="round" />
+      <path d="M87 71C95 75 99 78 101 84" stroke={C.forest} strokeWidth="2.7" strokeLinecap="round" />
+      <path d="M32 82H88" stroke={C.forest} strokeWidth="2.8" strokeLinecap="round" opacity=".8" />
+      <path d="M42 89C50 87 59 87 68 89" stroke={C.forest} strokeWidth="2.3" strokeLinecap="round" opacity=".55" />
     </svg>
+  );
+
+  if (!withWordmark) return icon;
+
+  if (stacked) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+        {icon}
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: size * 0.9, lineHeight: 1, letterSpacing: "-0.04em", color: C.forestDeep }}>
+            Lykkja
+          </div>
+          <div style={{ fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase", color: C.textSec, marginTop: 3 }}>
+            tilpass strikkeoppskrifter
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ly-logo-lockup">
+      {icon}
+      <div>
+        <div className="ly-wordmark">Lykkja</div>
+        <div className="ly-wordmark-sub">tilpass strikkeoppskrifter til din størrelse</div>
+      </div>
+    </div>
   );
 }
 
@@ -358,7 +408,7 @@ Svar på norsk. Ryddig format. Forklar endringene kort.`,
         <p key={i} style={st.rP}>
           {ps.map((p, j) =>
             p.startsWith("**") && p.endsWith("**") ? (
-              <strong key={j} style={{ fontWeight: 500, color: C.textPri }}>
+              <strong key={j} style={{ fontWeight: 600, color: C.textPri }}>
                 {p.slice(2, -2)}
               </strong>
             ) : (
@@ -371,121 +421,216 @@ Svar på norsk. Ryddig format. Forklar endringene kort.`,
   }
 
   return (
-    <div style={{ minHeight: "100vh", fontFamily: "'Outfit',sans-serif", color: C.textPri, background: C.ivory }}>
+    <div style={{ minHeight: "100vh", fontFamily: "'Outfit',sans-serif", color: C.textPri, background: `linear-gradient(180deg, ${C.paper} 0%, ${C.ivory} 28%, ${C.ivory} 100%)` }}>
       <style>{RESPONSIVE_CSS}</style>
 
-      <header style={{ borderBottom: `1px solid ${C.border}`, background: "rgba(250,250,245,0.92)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", position: "sticky", top: 0, zIndex: 10 }}>
-        <div className="mk-header-inner">
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Leaf s={22} />
-            <div>
-              <h1 className="mk-logo" style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 500, margin: 0, color: C.textPri, letterSpacing: "-0.02em" }}>maskeberegner</h1>
-              <p className="mk-logo-sub" style={{ color: C.textSec, margin: 0, letterSpacing: ".02em", fontWeight: 300 }}>tilpass oppskrifter til din størrelse</p>
-            </div>
-          </div>
-          <div className="mk-badge" style={{ alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 20, background: C.forestLight }}>
-            <Leaf s={14} c={C.textTer} />
-            <span style={{ fontSize: 11, color: C.textTer, fontFamily: "'Outfit',sans-serif", letterSpacing: ".04em" }}>AI-drevet</span>
+      <header
+        style={{
+          borderBottom: `1px solid ${C.border}`,
+          background: "rgba(250,250,245,0.88)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          position: "sticky",
+          top: 0,
+          zIndex: 20,
+        }}
+      >
+        <div className="ly-header-inner">
+          <LykkjaLogo size={48} withWordmark />
+          <div className="ly-badge" style={{ alignItems: "center", gap: 8 }}>
+            <div className="ly-logo-badge">Nordisk editorial</div>
           </div>
         </div>
       </header>
 
-      <main className="mk-main">
-        <div style={{ display: "flex", gap: 0, marginBottom: 24, borderBottom: `1px solid ${C.border}` }}>
-          <button className="mk-tab-btn" onClick={() => setTab("input")} style={{ ...st.tabBase, ...(tab === "input" ? st.tabAct : {}) }}>Oppskrift</button>
-          <button className="mk-tab-btn" onClick={() => setTab("result")} style={{ ...st.tabBase, ...(tab === "result" ? st.tabAct : {}), opacity: res ? 1 : .35, pointerEvents: res ? "auto" : "none" }}>Resultat</button>
+      <main className="ly-main">
+        <section className="ly-hero">
+          <div className="ly-card" style={{ animation: "fi .35s ease" }}>
+            <div className="ly-brandline">digital oppskriftstilpassing</div>
+            <h1 className="ly-display">Tilpass strikkeoppskrifter med ro, presisjon og bedre flyt.</h1>
+            <p className="ly-lead">
+              Lykkja hjelper deg å trekke ut oppskrifter fra PDF, justere størrelse og arbeide videre i et rolig, skandinavisk grensesnitt som føles mer som en redaksjonell arbeidsflate enn en teknisk app.
+            </p>
+            <div className="ly-hero-meta">
+              <div className="ly-hero-chip">PDF-uttrekk</div>
+              <div className="ly-hero-chip">Størrelsestilpassing</div>
+              <div className="ly-hero-chip">Norsk språk</div>
+            </div>
+          </div>
+
+          <div className="ly-card-soft" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 280 }}>
+            <LykkjaLogo size={120} withWordmark stacked />
+          </div>
+        </section>
+
+        <div style={{ display: "flex", gap: 0, marginBottom: 20, borderBottom: `1px solid ${C.border}` }}>
+          <button className="ly-tab-btn" onClick={() => setTab("input")} style={{ ...st.tabBase, ...(tab === "input" ? st.tabAct : {}) }}>
+            Oppskrift
+          </button>
+          <button
+            className="ly-tab-btn"
+            onClick={() => setTab("result")}
+            style={{
+              ...st.tabBase,
+              ...(tab === "result" ? st.tabAct : {}),
+              opacity: res ? 1 : 0.35,
+              pointerEvents: res ? "auto" : "none",
+            }}
+          >
+            Resultat
+          </button>
         </div>
 
         {tab === "input" && (
-          <div style={{ animation: "fi .3s ease" }}>
-            <div className="mk-card">
-              <div className="mk-card-top">
-                <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 20, fontWeight: 500, margin: 0, color: C.textPri }}>Din oppskrift</h2>
-                <button onClick={() => { setPat(EX); setSz("L"); setMode("text"); setPdfName(""); setPdfFileId(""); }} style={st.exBtn}>Se eksempel</button>
+          <div style={{ animation: "fi .35s ease" }}>
+            <div className="ly-card">
+              <div className="ly-card-top">
+                <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 28, fontWeight: 500, margin: 0, color: C.textPri }}>
+                  Din oppskrift
+                </h2>
+
+                <button
+                  onClick={() => {
+                    setPat(EX);
+                    setSz("L");
+                    setMode("text");
+                    setPdfName("");
+                    setPdfFileId("");
+                  }}
+                  style={st.exBtn}
+                >
+                  Se eksempel
+                </button>
               </div>
 
-              <div style={{ display: "flex", gap: 4, marginBottom: 16, background: C.sand, borderRadius: 10, padding: 3 }}>
+              <div style={{ display: "flex", gap: 4, marginBottom: 16, background: C.paper, borderRadius: 12, padding: 4 }}>
                 {[["text", "Lim inn tekst"], ["pdf", "Last opp PDF"]].map(([k, v]) => (
-                  <button key={k} className="mk-mode-btn" onClick={() => setMode(k)} style={{ ...st.modeBase, ...(mode === k ? st.modeOn : {}) }}>{v}</button>
+                  <button key={k} className="ly-mode-btn" onClick={() => setMode(k)} style={{ ...st.modeBase, ...(mode === k ? st.modeOn : {}) }}>
+                    {v}
+                  </button>
                 ))}
               </div>
 
               {mode === "text" && (
-                <textarea value={pat} onChange={(e) => setPat(e.target.value)} placeholder="Lim inn strikkeoppskriften din her…" style={st.ta} rows={10} />
+                <textarea
+                  value={pat}
+                  onChange={(e) => setPat(e.target.value)}
+                  placeholder="Lim inn strikkeoppskriften din her…"
+                  style={st.ta}
+                  rows={11}
+                />
               )}
 
               {mode === "pdf" && (
                 <>
                   <input ref={fRef} type="file" accept="application/pdf" style={{ display: "none" }} onChange={(e) => onFile(e.target.files?.[0])} />
+
                   {pdfLoad ? (
-                    <div className="mk-pdf-loading" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, color: C.forest }}>
+                    <div className="ly-pdf-loading" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, color: C.forest }}>
                       <Spin s={24} />
-                      <p style={{ fontSize: 14, fontWeight: 400, margin: 0, animation: "pu 2s ease-in-out infinite" }}>{pMsgs[msg]}</p>
+                      <p style={{ fontSize: 14, fontWeight: 500, margin: 0, animation: "pu 2s ease-in-out infinite" }}>{pMsgs[msg]}</p>
                       <p style={{ fontSize: 12, color: C.textTer, margin: 0, fontStyle: "italic" }}>{pdfName}</p>
                     </div>
                   ) : pat ? (
-                    <div style={{ border: `1px solid rgba(45,107,79,0.15)`, borderRadius: 12, overflow: "hidden", background: C.forestLight }}>
+                    <div style={{ border: `1px solid rgba(45,107,79,0.14)`, borderRadius: 14, overflow: "hidden", background: C.forestLight }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", borderBottom: `1px solid rgba(45,107,79,0.1)`, gap: 12, flexWrap: "wrap" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <div style={st.pdfCheck}>✓</div>
                           <div>
-                            <p style={{ fontSize: 13, fontWeight: 500, margin: 0, color: C.forest }}>Oppskrift hentet</p>
-                            <p style={{ fontSize: 11, color: C.forestMid, margin: "1px 0 0", wordBreak: "break-all" }}>
+                            <p style={{ fontSize: 13, fontWeight: 600, margin: 0, color: C.forest }}>Oppskrift hentet</p>
+                            <p style={{ fontSize: 11, color: C.forestDeep, margin: "2px 0 0", wordBreak: "break-all", opacity: 0.8 }}>
                               {pdfName}{pdfFileId ? ` · ${pdfFileId}` : ""}
                             </p>
                           </div>
                         </div>
-                        <button onClick={() => { setPat(""); setPdfName(""); setPdfFileId(""); }} style={st.pdfRm}>Fjern</button>
+
+                        <button
+                          onClick={() => {
+                            setPat("");
+                            setPdfName("");
+                            setPdfFileId("");
+                          }}
+                          style={st.pdfRm}
+                        >
+                          Fjern
+                        </button>
                       </div>
-                      <div style={{ padding: "10px 16px", maxHeight: 160, overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
-                        <pre style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 13, lineHeight: 1.6, color: C.textPri, margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-                          {pat.slice(0, 400)}{pat.length > 400 ? "…" : ""}
+
+                      <div style={{ padding: "12px 16px", maxHeight: 170, overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
+                        <pre
+                          style={{
+                            fontFamily: "'Cormorant Garamond',serif",
+                            fontSize: 15,
+                            lineHeight: 1.65,
+                            color: C.textPri,
+                            margin: 0,
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {pat.slice(0, 450)}{pat.length > 450 ? "…" : ""}
                         </pre>
                       </div>
-                      <button onClick={() => setMode("text")} style={st.pdfEdit}>Rediger tekst →</button>
+
+                      <button onClick={() => setMode("text")} style={st.pdfEdit}>
+                        Rediger tekst →
+                      </button>
                     </div>
                   ) : (
                     <div
-                      className="mk-drop"
+                      className="ly-drop"
                       style={{ ...st.drop, ...(drag ? st.dropOn : {}) }}
                       onDrop={onDrop}
-                      onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
-                      onDragLeave={(e) => { e.preventDefault(); setDrag(false); }}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setDrag(true);
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        setDrag(false);
+                      }}
                       onClick={() => fRef.current?.click()}
                     >
-                      <svg width="40" height="40" viewBox="0 0 48 48" fill="none">
-                        <path d="M8 7a3 3 0 013-3h18l11 11v29a3 3 0 01-3 3H11a3 3 0 01-3-3V7z" fill={C.forestLight} stroke={C.forest} strokeWidth="1.2" />
-                        <path d="M29 4v7a3 3 0 003 3h8" fill="none" stroke={C.forest} strokeWidth="1.2" />
-                        <text x="24" y="32" textAnchor="middle" fontSize="9" fontWeight="600" fill={C.forest} fontFamily="Outfit,sans-serif">PDF</text>
-                      </svg>
-                      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 18, fontWeight: 500, color: C.textPri, margin: "10px 0 0" }}>Dra og slipp PDF-en hit</p>
-                      <p style={{ fontSize: 13, color: C.textSec, margin: 0, fontWeight: 300 }}>eller klikk for å velge fil</p>
-                      <span style={{ marginTop: 8, fontSize: 11, color: C.textTer, background: C.sand, borderRadius: 6, padding: "3px 10px" }}>PDF · maks 20 MB</span>
+                      <LykkjaLogo size={64} />
+                      <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 24, fontWeight: 500, color: C.textPri, margin: "8px 0 0" }}>
+                        Legg inn PDF-oppskrift
+                      </p>
+                      <p style={{ fontSize: 14, color: C.textSec, margin: 0, fontWeight: 400 }}>
+                        dra og slipp filen hit eller klikk for å velge
+                      </p>
+                      <span style={{ marginTop: 8, fontSize: 11, color: C.textTer, background: "#fff", borderRadius: 999, padding: "5px 10px", border: `1px solid ${C.border}` }}>
+                        PDF · maks 20 MB
+                      </span>
                     </div>
                   )}
                 </>
               )}
             </div>
 
-            <div className="mk-settings">
-              <div className="mk-card">
+            <div className="ly-settings">
+              <div className="ly-card">
                 <h3 style={st.setLabel}>Størrelse</h3>
-                <div className="mk-sz-grid">
+                <div className="ly-sz-grid">
                   {sizes.map((v) => (
-                    <button key={v} onClick={() => setSz(v)} style={{ ...st.szBtn, ...(sz === v ? st.szOn : {}) }}>{v}</button>
+                    <button key={v} onClick={() => setSz(v)} style={{ ...st.szBtn, ...(sz === v ? st.szOn : {}) }}>
+                      {v}
+                    </button>
                   ))}
                 </div>
               </div>
-              <div className="mk-card">
-                <h3 style={st.setLabel}>Strikkefasthet <span style={st.opt}>valgfritt</span></h3>
+
+              <div className="ly-card">
+                <h3 style={st.setLabel}>
+                  Strikkefasthet <span style={st.opt}>valgfritt</span>
+                </h3>
                 <input type="text" value={gauge} onChange={(e) => setGauge(e.target.value)} placeholder="F.eks: 19 m × 26 omg = 10×10 cm" style={st.inp} />
-                <p style={st.hint}>Oppgi din fasthet om den avviker fra oppskriften.</p>
+                <p style={st.hint}>Oppgi din fasthet hvis den avviker fra oppskriften. Da blir tilpasningen mer presis.</p>
               </div>
             </div>
 
             {err && <div style={st.errBox}>{err}</div>}
 
-            <button className="mk-submit" onClick={adapt} disabled={load || pdfLoad} style={{ ...st.submit, ...(load || pdfLoad ? { opacity: .8, cursor: "wait" } : {}) }}>
+            <button className="ly-submit" onClick={adapt} disabled={load || pdfLoad} style={{ ...st.submit, ...(load || pdfLoad ? { opacity: 0.82, cursor: "wait" } : {}) }}>
               {load ? (
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
                   <Spin />
@@ -499,39 +644,48 @@ Svar på norsk. Ryddig format. Forklar endringene kort.`,
         )}
 
         {tab === "result" && res && (
-          <div style={{ animation: "fi .4s ease" }}>
-            <div style={{ background: "#fff", borderRadius: 14, border: `1px solid ${C.border}`, overflow: "hidden" }}>
-              <div className="mk-result-head" style={{ borderBottom: `1px solid ${C.border}` }}>
+          <div style={{ animation: "fi .35s ease" }}>
+            <div style={{ background: "#fff", borderRadius: 18, border: `1px solid ${C.border}`, overflow: "hidden", boxShadow: "0 8px 24px rgba(0,0,0,.03)" }}>
+              <div className="ly-result-head" style={{ borderBottom: `1px solid ${C.border}` }}>
                 <div>
-                  <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontWeight: 500, margin: 0 }}>Tilpasset oppskrift</h2>
-                  <p style={{ fontSize: 13, color: C.forest, margin: "2px 0 0", fontWeight: 500 }}>
-                    Størrelse {sz}{pdfName && <span style={{ opacity: .5 }}> · {pdfName}</span>}
+                  <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 30, fontWeight: 500, margin: 0, color: C.textPri }}>
+                    Tilpasset oppskrift
+                  </h2>
+                  <p style={{ fontSize: 13, color: C.forest, margin: "4px 0 0", fontWeight: 600, letterSpacing: ".02em" }}>
+                    Lykkja · størrelse {sz}{pdfName && <span style={{ opacity: 0.6 }}> · {pdfName}</span>}
                   </p>
                 </div>
-                <div className="mk-result-actions">
-                  <button onClick={() => navigator.clipboard.writeText(res)} style={st.cpyBtn}>Kopier</button>
-                  <button onClick={() => setTab("input")} style={st.backBtn}>← Tilbake</button>
+
+                <div className="ly-result-actions">
+                  <button onClick={() => navigator.clipboard.writeText(res)} style={st.cpyBtn}>
+                    Kopier
+                  </button>
+                  <button onClick={() => setTab("input")} style={st.backBtn}>
+                    ← Tilbake
+                  </button>
                 </div>
               </div>
-              <div className="mk-result-body" style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 16, lineHeight: 1.85, color: C.textPri }}>
+
+              <div className="ly-result-body" style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 18, lineHeight: 1.85, color: C.textPri }}>
                 {fmt(res)}
               </div>
             </div>
-            <div className="mk-tip" style={{ background: C.forestLight, borderRadius: 12, border: `1px solid rgba(45,107,79,0.1)`, marginTop: 16, alignItems: "flex-start" }}>
-              <Leaf s={18} c={C.forest} style={{ flexShrink: 0, marginTop: 2 }} />
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: C.charcoalSoft, margin: 0, fontWeight: 300 }}>
-                <strong>Tips:</strong> Strikk alltid en prøvelapp før du starter. Juster pinnestørrelse for å oppnå riktig strikkefasthet.
+
+            <div className="ly-tip" style={{ background: C.forestLight, borderRadius: 14, border: `1px solid rgba(45,107,79,0.1)`, marginTop: 16, alignItems: "flex-start" }}>
+              <LykkjaLogo size={26} />
+              <p style={{ fontSize: 13, lineHeight: 1.65, color: C.charcoalSoft, margin: 0, fontWeight: 400 }}>
+                <strong>Tips:</strong> Strikk alltid en prøvelapp før du starter. Juster pinnestørrelse for å oppnå riktig strikkefasthet før du begynner på det endelige plagget.
               </p>
             </div>
           </div>
         )}
       </main>
 
-      <footer className="mk-footer" style={{ fontSize: 12, color: C.textTer, fontWeight: 300, letterSpacing: ".02em" }}>
-        <Leaf s={14} c={C.textTer} />
-        <span>maskeberegner</span>
-        <span style={{ opacity: .4 }}>·</span>
-        <span>AI-drevet strikkeassistent</span>
+      <footer className="ly-footer" style={{ fontSize: 12, color: C.textTer, fontWeight: 400, letterSpacing: ".03em" }}>
+        <LykkjaLogo size={20} />
+        <span>Lykkja</span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span>digital oppskriftstilpassing</span>
       </footer>
     </div>
   );
@@ -544,21 +698,24 @@ const st = {
     background: "none",
     fontFamily: "'Outfit',sans-serif",
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: 500,
     color: C.textSec,
     cursor: "pointer",
     transition: "all .2s",
   },
-  tabAct: { color: C.forest, borderBottomColor: C.forest, fontWeight: 500 },
+  tabAct: {
+    color: C.forest,
+    borderBottomColor: C.forest,
+  },
 
   exBtn: {
-    background: C.forestLight,
-    border: `1px solid rgba(45,107,79,0.15)`,
-    borderRadius: 8,
+    background: "#fff",
+    border: `1px solid ${C.borderStrong}`,
+    borderRadius: 999,
     padding: "8px 14px",
     fontSize: 12,
     fontWeight: 500,
-    color: C.forest,
+    color: C.textPri,
     cursor: "pointer",
     fontFamily: "'Outfit',sans-serif",
     minHeight: 36,
@@ -569,26 +726,30 @@ const st = {
     flex: 1,
     border: "none",
     background: "transparent",
-    borderRadius: 8,
+    borderRadius: 10,
     fontFamily: "'Outfit',sans-serif",
-    fontWeight: 400,
+    fontWeight: 500,
     color: C.textSec,
     cursor: "pointer",
     transition: "all .2s",
   },
-  modeOn: { background: "#fff", color: C.textPri, fontWeight: 500, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" },
+  modeOn: {
+    background: "#fff",
+    color: C.textPri,
+    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+  },
 
   ta: {
     width: "100%",
     border: `1px solid ${C.border}`,
-    borderRadius: 10,
-    padding: "14px 16px",
-    fontSize: 15,
-    lineHeight: 1.75,
+    borderRadius: 14,
+    padding: "16px 18px",
+    fontSize: 17,
+    lineHeight: 1.78,
     fontFamily: "'Cormorant Garamond',serif",
     fontWeight: 400,
     color: C.textPri,
-    background: C.ivory,
+    background: "#fff",
     resize: "vertical",
     transition: "border-color .2s,box-shadow .2s",
     WebkitAppearance: "none",
@@ -597,66 +758,69 @@ const st = {
   inp: {
     width: "100%",
     border: `1px solid ${C.border}`,
-    borderRadius: 10,
-    padding: "12px 14px",
+    borderRadius: 12,
+    padding: "13px 14px",
     fontSize: 14,
     fontFamily: "'Outfit',sans-serif",
     color: C.textPri,
-    background: C.ivory,
+    background: "#fff",
     transition: "border-color .2s,box-shadow .2s",
-    minHeight: 44,
+    minHeight: 46,
     WebkitAppearance: "none",
   },
 
   drop: {
-    border: `2px dashed rgba(45,107,79,0.2)`,
-    borderRadius: 14,
+    border: `1.5px dashed rgba(45,107,79,0.22)`,
+    borderRadius: 18,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: 6,
+    gap: 8,
     cursor: "pointer",
     transition: "all .25s",
-    background: "rgba(45,107,79,0.02)",
+    background: "linear-gradient(180deg, rgba(255,255,255,.9) 0%, rgba(232,240,235,.72) 100%)",
   },
-  dropOn: { borderColor: C.forest, background: "rgba(45,107,79,0.05)" },
+  dropOn: {
+    borderColor: C.forest,
+    background: "linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(232,240,235,.95) 100%)",
+  },
 
   pdfCheck: {
-    width: 26,
-    height: 26,
+    width: 28,
+    height: 28,
     borderRadius: "50%",
     background: "rgba(45,107,79,0.12)",
     color: C.forest,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: 13,
-    fontWeight: 600,
+    fontSize: 14,
+    fontWeight: 700,
     flexShrink: 0,
   },
 
   pdfRm: {
-    background: "rgba(180,60,40,0.06)",
+    background: "rgba(180,60,40,0.05)",
     border: "1px solid rgba(180,60,40,0.12)",
-    borderRadius: 6,
-    padding: "6px 12px",
+    borderRadius: 999,
+    padding: "7px 12px",
     fontSize: 12,
     color: "#8b3020",
     cursor: "pointer",
     fontFamily: "'Outfit',sans-serif",
-    minHeight: 32,
+    minHeight: 34,
     whiteSpace: "nowrap",
   },
 
   pdfEdit: {
     width: "100%",
-    padding: "11px",
+    padding: "12px",
     border: "none",
     borderTop: `1px solid rgba(45,107,79,0.1)`,
     background: "transparent",
     color: C.forest,
     fontSize: 13,
-    fontWeight: 500,
+    fontWeight: 600,
     cursor: "pointer",
     fontFamily: "'Outfit',sans-serif",
     minHeight: 44,
@@ -664,7 +828,7 @@ const st = {
 
   setLabel: {
     fontFamily: "'Cormorant Garamond',serif",
-    fontSize: 17,
+    fontSize: 24,
     fontWeight: 500,
     margin: "0 0 12px",
     color: C.textPri,
@@ -673,40 +837,46 @@ const st = {
   opt: {
     fontFamily: "'Outfit',sans-serif",
     fontSize: 11,
-    fontWeight: 300,
+    fontWeight: 500,
     color: C.textTer,
     marginLeft: 6,
+    letterSpacing: ".04em",
+    textTransform: "uppercase",
   },
 
   hint: {
     fontSize: 12,
-    color: C.textTer,
+    color: C.textSec,
     marginTop: 8,
-    lineHeight: 1.5,
-    fontWeight: 300,
+    lineHeight: 1.6,
+    fontWeight: 400,
   },
 
   szBtn: {
-    padding: "10px 0",
+    padding: "11px 0",
     border: `1px solid ${C.border}`,
-    borderRadius: 8,
-    background: C.ivory,
+    borderRadius: 12,
+    background: "#fff",
     fontSize: 14,
-    fontWeight: 400,
+    fontWeight: 500,
     color: C.charcoalSoft,
     cursor: "pointer",
     fontFamily: "'Outfit',sans-serif",
     transition: "all .15s",
     textAlign: "center",
-    minHeight: 44,
+    minHeight: 46,
   },
-  szOn: { background: C.forest, color: "#fff", borderColor: C.forest },
+  szOn: {
+    background: C.forest,
+    color: "#fff",
+    borderColor: C.forest,
+  },
 
   errBox: {
     background: "rgba(180,60,40,0.04)",
     border: "1px solid rgba(180,60,40,0.12)",
-    borderRadius: 10,
-    padding: "12px 16px",
+    borderRadius: 12,
+    padding: "13px 16px",
     color: "#7a2e1d",
     fontSize: 13,
     marginBottom: 14,
@@ -715,38 +885,39 @@ const st = {
   submit: {
     width: "100%",
     border: "none",
-    borderRadius: 12,
+    borderRadius: 14,
     background: C.forest,
     color: "#fff",
-    fontWeight: 500,
+    fontWeight: 600,
     fontFamily: "'Outfit',sans-serif",
     cursor: "pointer",
     transition: "all .2s",
-    marginTop: 8,
+    marginTop: 10,
     letterSpacing: ".01em",
+    boxShadow: "0 10px 20px rgba(45,107,79,.14)",
   },
 
   cpyBtn: {
-    padding: "9px 16px",
-    border: `1px solid rgba(45,107,79,0.2)`,
-    borderRadius: 8,
+    padding: "10px 16px",
+    border: `1px solid rgba(45,107,79,0.18)`,
+    borderRadius: 999,
     background: C.forestLight,
     color: C.forest,
     fontSize: 13,
-    fontWeight: 500,
+    fontWeight: 600,
     cursor: "pointer",
     fontFamily: "'Outfit',sans-serif",
     minHeight: 40,
   },
 
   backBtn: {
-    padding: "9px 16px",
+    padding: "10px 16px",
     border: `1px solid ${C.border}`,
-    borderRadius: 8,
+    borderRadius: 999,
     background: "transparent",
     color: C.textSec,
     fontSize: 13,
-    fontWeight: 400,
+    fontWeight: 500,
     cursor: "pointer",
     fontFamily: "'Outfit',sans-serif",
     minHeight: 40,
@@ -754,17 +925,17 @@ const st = {
 
   rH2: {
     fontFamily: "'Cormorant Garamond',serif",
-    fontSize: 22,
+    fontSize: 28,
     fontWeight: 600,
     color: C.textPri,
-    margin: "28px 0 10px",
+    margin: "30px 0 10px",
     borderBottom: `1px solid ${C.border}`,
     paddingBottom: 8,
   },
 
   rH3: {
     fontFamily: "'Cormorant Garamond',serif",
-    fontSize: 19,
+    fontSize: 23,
     fontWeight: 500,
     color: C.textPri,
     margin: "22px 0 8px",
@@ -773,7 +944,7 @@ const st = {
   rH4: {
     fontFamily: "'Outfit',sans-serif",
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: 600,
     color: C.charcoalSoft,
     margin: "16px 0 6px",
   },
@@ -783,11 +954,11 @@ const st = {
     marginBottom: 4,
     listStyleType: '"– "',
     paddingLeft: 4,
-    fontSize: 15,
+    fontSize: 17,
   },
 
   rP: {
-    margin: "5px 0",
-    fontSize: 15,
+    margin: "6px 0",
+    fontSize: 17,
   },
 };
