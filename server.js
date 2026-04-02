@@ -6,58 +6,63 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json({ limit: '10mb' }));
+app.use((req, res, next) => {
+  console.log(`[IN] ${req.method} ${req.url}`);
+  next();
+});
+
+app.use(express.json({ limit: '30mb' }));
 app.use(express.static(join(__dirname, 'dist')));
 
-async function parseAnthropicJson(response) {
+function safeJson(res, status, payload) {
+  if (!res.headersSent) {
+    return res.status(status).json(payload);
+  }
+}
+
+async function parseResponseText(response, label) {
+  const contentType = response.headers.get('content-type');
   const raw = await response.text();
 
+  console.log(
+    `[${label}] status=${response.status} content-type=${contentType || 'unknown'} raw-length=${raw.length}`
+  );
+
   if (!raw || !raw.trim()) {
-    throw new Error('Tomt svar fra AI-tjenesten.');
+    throw new Error(`${label}: Tomt svar`);
   }
 
   let data;
   try {
     data = JSON.parse(raw);
   } catch {
-    throw new Error(`Ugyldig svar fra AI-tjenesten (${response.status}).`);
+    throw new Error(`${label}: Ugyldig JSON. Første 300 tegn: ${raw.slice(0, 300)}`);
   }
 
   if (!response.ok) {
-    throw new Error(data?.error?.message || `Anthropic-feil (${response.status}).`);
+    throw new Error(data?.error?.message || `${label}: HTTP ${response.status}`);
   }
 
   if (data?.error) {
-    throw new Error(data.error.message || 'Ukjent Anthropic-feil.');
+    throw new Error(data.error.message || `${label}: Uspesifisert API-feil`);
   }
 
   return data;
 }
 
-async function uploadPdfToAnthropic({ filename, mimeType, buffer, apiKey }) {
-  const form = new FormData();
-  const blob = new Blob([buffer], { type: mimeType || 'application/pdf' });
-
-  form.append('file', blob, filename || 'document.pdf');
-
-  const response = await fetch('https://api.anthropic.com/v1/files', {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-beta': 'files-api-2025-04-14',
-    },
-    body: form,
+app.get('/api/health', (req, res) => {
+  res.json({
+    ok: true,
+    hasApiKey: !!process.env.ANTHROPIC_API_KEY,
+    time: new Date().toISOString(),
   });
-
-  return parseAnthropicJson(response);
-}
+});
 
 app.post('/api/upload-pdf', async (req, res) => {
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({
+    return safeJson(res, 500, {
       error: { message: 'ANTHROPIC_API_KEY not configured' },
     });
   }
@@ -66,29 +71,43 @@ app.post('/api/upload-pdf', async (req, res) => {
     const { filename, mimeType, data } = req.body || {};
 
     if (!data) {
-      return res.status(400).json({
+      return safeJson(res, 400, {
         error: { message: 'Mangler PDF-data.' },
       });
     }
 
-    const buffer = Buffer.from(data, 'base64');
+    console.log(
+      `[UPLOAD] filename=${filename || 'unknown'} mimeType=${mimeType || 'unknown'} base64-length=${data.length}`
+    );
 
-    const uploaded = await uploadPdfToAnthropic({
-      filename: filename || 'document.pdf',
-      mimeType: mimeType || 'application/pdf',
-      buffer,
-      apiKey,
+    const buffer = Buffer.from(data, 'base64');
+    console.log(`[UPLOAD] decoded-bytes=${buffer.length}`);
+
+    const form = new FormData();
+    const blob = new Blob([buffer], { type: mimeType || 'application/pdf' });
+    form.append('file', blob, filename || 'document.pdf');
+
+    const response = await fetch('https://api.anthropic.com/v1/files', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'files-api-2025-04-14',
+      },
+      body: form,
     });
 
-    return res.json({
+    const uploaded = await parseResponseText(response, 'FILES_API');
+
+    return safeJson(res, 200, {
       file_id: uploaded.id,
       filename: uploaded.filename,
       mime_type: uploaded.mime_type,
       size_bytes: uploaded.size_bytes,
     });
   } catch (err) {
-    console.error('PDF upload error:', err);
-    return res.status(500).json({
+    console.error('[UPLOAD ERROR]', err);
+    return safeJson(res, 500, {
       error: { message: err.message || 'Kunne ikke laste opp PDF.' },
     });
   }
@@ -98,16 +117,18 @@ app.post('/api/messages', async (req, res) => {
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({
+    return safeJson(res, 500, {
       error: { message: 'ANTHROPIC_API_KEY not configured' },
     });
   }
 
   try {
+    console.log('[MESSAGES] forwarding request');
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'anthropic-beta': 'files-api-2025-04-14',
@@ -115,19 +136,32 @@ app.post('/api/messages', async (req, res) => {
       body: JSON.stringify(req.body),
     });
 
-    const data = await parseAnthropicJson(response);
-    return res.status(response.status).json(data);
+    const data = await parseResponseText(response, 'MESSAGES_API');
+    return safeJson(res, response.status, data);
   } catch (err) {
-    console.error('API proxy error:', err);
-    return res.status(500).json({
+    console.error('[MESSAGES ERROR]', err);
+    return safeJson(res, 500, {
       error: { message: err.message || 'Kunne ikke koble til AI-tjenesten.' },
     });
   }
 });
 
-// SPA fallback
 app.get('/{*splat}', (req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));
+});
+
+app.use((err, req, res, next) => {
+  console.error('[EXPRESS ERROR]', err);
+
+  if (err?.type === 'entity.too.large') {
+    return safeJson(res, 413, {
+      error: { message: 'Filen er for stor for backend-opplasting.' },
+    });
+  }
+
+  return safeJson(res, 500, {
+    error: { message: err.message || 'Uventet serverfeil.' },
+  });
 });
 
 app.listen(PORT, () => {
