@@ -9,11 +9,13 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(join(__dirname, 'dist')));
 
-// Proxy endpoint for Anthropic API
 app.post('/api/messages', async (req, res) => {
   const apiKey = process.env.ANTHROPIC_API_KEY;
+
   if (!apiKey) {
-    return res.status(500).json({ error: { message: 'ANTHROPIC_API_KEY not configured' } });
+    return res.status(500).json({
+      error: { message: 'ANTHROPIC_API_KEY not configured' },
+    });
   }
 
   try {
@@ -27,11 +29,32 @@ app.post('/api/messages', async (req, res) => {
       body: JSON.stringify(req.body),
     });
 
-    const data = await response.json();
-    res.status(response.status).json(data);
+    const raw = await response.text();
+
+    if (!raw || !raw.trim()) {
+      return res.status(502).json({
+        error: { message: 'Tomt svar fra AI-tjenesten.' },
+      });
+    }
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      return res.status(502).json({
+        error: {
+          message: `Ugyldig svar fra AI-tjenesten (${response.status}).`,
+          raw: raw.slice(0, 500),
+        },
+      });
+    }
+
+    return res.status(response.status).json(data);
   } catch (err) {
     console.error('API proxy error:', err);
-    res.status(500).json({ error: { message: 'Kunne ikke koble til AI-tjenesten.' } });
+    return res.status(500).json({
+      error: { message: 'Kunne ikke koble til AI-tjenesten.' },
+    });
   }
 });
 
