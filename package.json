@@ -13,16 +13,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
     "express": "^5.2.1",
-=======
-    "jspdf": "^4.2.1",
->>>>>>> eb70a5b (Add jspdf and PDF export)
+    "jspdf": "^3.0.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.1",
     "vite": "^8.0.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
