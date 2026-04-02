@@ -191,26 +191,26 @@ function LykkjaLogo({ size = 46, withWordmark = false, stacked = false }) {
   );
 }
 
-async function readJsonResponse(response) {
+async function readJsonResponse(response, label = "Server") {
   const raw = await response.text();
 
   if (!raw || !raw.trim()) {
-    throw new Error("Serveren returnerte tomt svar.");
+    throw new Error(`${label} returnerte tomt svar.`);
   }
 
   let data;
   try {
     data = JSON.parse(raw);
   } catch {
-    throw new Error(`Ugyldig svar fra server (${response.status}).`);
+    throw new Error(`${label} returnerte ugyldig svar (${response.status}).`);
   }
 
   if (!response.ok) {
-    throw new Error(data?.error?.message || `Serverfeil (${response.status})`);
+    throw new Error(data?.error?.message || `${label}-feil (${response.status})`);
   }
 
   if (data?.error) {
-    throw new Error(data.error.message || "Ukjent serverfeil.");
+    throw new Error(data.error.message || `Ukjent feil fra ${label}.`);
   }
 
   return data;
@@ -269,11 +269,11 @@ export default function App() {
       }),
     });
 
-    const uploadData = await readJsonResponse(uploadResponse);
+    const uploadData = await readJsonResponse(uploadResponse, "PDF-opplasting");
     const fileId = uploadData.file_id;
 
     if (!fileId) {
-      throw new Error("Mangler file_id fra server.");
+      throw new Error("PDF-opplasting mangler file_id fra server.");
     }
 
     const extractResponse = await fetch("/api/messages", {
@@ -303,7 +303,7 @@ export default function App() {
       }),
     });
 
-    const extractData = await readJsonResponse(extractResponse);
+    const extractData = await readJsonResponse(extractResponse, "PDF-uttrekk");
 
     const extractedText = (extractData.content || [])
       .filter((b) => b.type === "text")
@@ -387,7 +387,7 @@ Svar på norsk. Ryddig format. Forklar endringene kort.`,
         }),
       });
 
-      const data = await readJsonResponse(response);
+      const data = await readJsonResponse(response, "Tilpasning");
 
       const text = (data.content || [])
         .filter((b) => b.type === "text")
