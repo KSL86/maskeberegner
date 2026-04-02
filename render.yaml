@@ -1,7 +1,9 @@
 services:
   - type: web
     name: maskeberegner
-    runtime: static
+    runtime: node
     buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    envVars: []
+    startCommand: npm start
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
