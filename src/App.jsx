@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { jsPDF } from "jspdf";
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap');`;
 
@@ -215,6 +216,14 @@ async function readJsonResponse(response) {
   return data;
 }
 
+function cleanFileName(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
 export default function App() {
   const [pat, setPat] = useState("");
   const [sz, setSz] = useState("M");
@@ -394,6 +403,258 @@ Svar på norsk. Ryddig format. Forklar endringene kort.`,
     }
   }
 
+  function downloadPdf() {
+    if (!res) return;
+
+    const doc = new jsPDF({
+      unit: "pt",
+      format: "a4",
+    });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 56;
+    const maxWidth = pageWidth - margin * 2;
+    let y = margin;
+
+    const addPageIfNeeded = (needed = 24) => {
+      if (y + needed > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+    };
+
+    const writeLine = (text, options = {}) => {
+      const {
+        size = 12,
+        color = [44, 41, 37],
+        font = "times",
+        style = "normal",
+        spacingAfter = 10,
+      } = options;
+
+      doc.setFont(font, style);
+      doc.setFontSize(size);
+      doc.setTextColor(...color);
+
+      const lines = doc.splitTextToSize(text, maxWidth);
+      const lineHeight = size * 1.45;
+
+      lines.forEach((line) => {
+        addPageIfNeeded(lineHeight);
+        doc.text(line, margin, y);
+        y += lineHeight;
+      });
+
+      y += spacingAfter;
+    };
+
+    const title = "Lykkja";
+    const subtitle = "Tilpasset strikkeoppskrift";
+    const meta = `Størrelse: ${sz}${pdfName ? ` · Kilde: ${pdfName}` : ""}${gauge ? ` · Strikkefasthet: ${gauge}` : ""}`;
+
+    writeLine(title, {
+      size: 26,
+      font: "times",
+      style: "bold",
+      color: [36, 79, 59],
+      spacingAfter: 4,
+    });
+
+    writeLine(subtitle, {
+      size: 16,
+      font: "helvetica",
+      style: "normal",
+      color: [111, 106, 98],
+      spacingAfter: 8,
+    });
+
+    writeLine(meta, {
+      size: 10,
+      font: "helvetica",
+      style: "normal",
+      color: [111, 106, 98],
+      spacingAfter: 18,
+    });
+
+    const lines = res.split("\n");
+
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+
+      if (!trimmed) {
+        y += 8;
+        return;
+      }
+
+      if (trimmed.startsWith("# ")) {
+        writeLine(trimmed.slice(2), {
+          size: 20,
+          font: "times",
+          style: "bold",
+          color: [44, 41, 37],
+          spacingAfter: 8,
+        });
+        return;
+      }
+
+      if (trimmed.startsWith("## ")) {
+        writeLine(trimmed.slice(3), {
+          size: 16,
+          font: "times",
+          style: "bold",
+          color: [44, 41, 37],
+          spacingAfter: 6,
+        });
+        return;
+      }
+
+      if (trimmed.startsWith("### ")) {
+        writeLine(trimmed.slice(4), {
+          size: 13,
+          font: "helvetica",
+          style: "bold",
+          color: [74, 70, 64],
+          spacingAfter: 4,
+        });
+        return;
+      }
+
+      if (trimmed.startsWith("- ")) {
+        writeLine(`• ${trimmed.slice(2)}`, {
+          size: 12,
+          font: "times",
+          style: "normal",
+          color: [44, 41, 37],
+          spacingAfter: 4,
+        });
+        return;
+      }
+
+      const plain = trimmed.replace(/\*\*(.*?)\*\*/g, "$1");
+
+      writeLine(plain, {
+        size: 12,
+        font: "times",
+        style: "normal",
+        color: [44, 41, 37],
+        spacingAfter: 6,
+      });
+    });
+
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(140, 136, 128);
+      doc.text(
+        `Lykkja · Side ${i} av ${totalPages}`,
+        pageWidth - margin,
+        pageHeight - 24,
+        { align: "right" }
+      );
+    }
+
+    const filename = `${cleanFileName(pdfName || "tilpasset-oppskrift")}-${sz}.pdf`;
+    doc.save(filename);
+  }
+
+  function printResult() {
+    if (!res) return;
+
+    const printWindow = window.open("", "_blank", "width=900,height=1200");
+    if (!printWindow) return;
+
+    const contentHtml = res
+      .split("\n")
+      .map((line) => {
+        const trimmed = line.trim();
+
+        if (!trimmed) return "<div style='height:10px'></div>";
+        if (trimmed.startsWith("# ")) return `<h1>${trimmed.slice(2)}</h1>`;
+        if (trimmed.startsWith("## ")) return `<h2>${trimmed.slice(3)}</h2>`;
+        if (trimmed.startsWith("### ")) return `<h3>${trimmed.slice(4)}</h3>`;
+        if (trimmed.startsWith("- ")) return `<p>• ${trimmed.slice(2)}</p>`;
+
+        return `<p>${trimmed.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")}</p>`;
+      })
+      .join("");
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html lang="no">
+        <head>
+          <meta charset="UTF-8" />
+          <title>Lykkja – utskrift</title>
+          <style>
+            body {
+              font-family: Georgia, "Times New Roman", serif;
+              color: #2c2925;
+              margin: 0;
+              padding: 40px;
+              line-height: 1.6;
+              background: white;
+            }
+            .top {
+              border-bottom: 1px solid #ddd7cc;
+              margin-bottom: 24px;
+              padding-bottom: 16px;
+            }
+            .brand {
+              font-size: 34px;
+              color: #244f3b;
+              margin: 0 0 6px;
+            }
+            .sub {
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 13px;
+              color: #6f6a62;
+              margin: 0;
+            }
+            h1 {
+              font-size: 28px;
+              margin: 28px 0 10px;
+            }
+            h2 {
+              font-size: 22px;
+              margin: 22px 0 8px;
+            }
+            h3 {
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 14px;
+              margin: 16px 0 6px;
+              color: #4a4640;
+            }
+            p {
+              margin: 0 0 10px;
+              font-size: 16px;
+            }
+            strong {
+              font-weight: 700;
+            }
+            @media print {
+              body {
+                padding: 20mm;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="top">
+            <h1 class="brand">Lykkja</h1>
+            <p class="sub">Tilpasset oppskrift · størrelse ${sz}${pdfName ? ` · ${pdfName}` : ""}</p>
+          </div>
+          ${contentHtml}
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
   function fmt(t) {
     return t.split("\n").map((l, i) => {
       if (l.startsWith("# ")) return <h2 key={i} style={st.rH2}>{l.slice(2)}</h2>;
@@ -455,6 +716,7 @@ Svar på norsk. Ryddig format. Forklar endringene kort.`,
               <div className="ly-hero-chip">PDF-uttrekk</div>
               <div className="ly-hero-chip">Størrelsestilpassing</div>
               <div className="ly-hero-chip">Norsk språk</div>
+              <div className="ly-hero-chip">PDF og utskrift</div>
             </div>
           </div>
 
@@ -659,6 +921,12 @@ Svar på norsk. Ryddig format. Forklar endringene kort.`,
                 <div className="ly-result-actions">
                   <button onClick={() => navigator.clipboard.writeText(res)} style={st.cpyBtn}>
                     Kopier
+                  </button>
+                  <button onClick={downloadPdf} style={st.cpyBtn}>
+                    Last ned PDF
+                  </button>
+                  <button onClick={printResult} style={st.cpyBtn}>
+                    Skriv ut
                   </button>
                   <button onClick={() => setTab("input")} style={st.backBtn}>
                     ← Tilbake
