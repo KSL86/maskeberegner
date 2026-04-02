@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: maskeberegner
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars: []
